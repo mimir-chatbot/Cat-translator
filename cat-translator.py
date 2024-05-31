@@ -1,5 +1,4 @@
-from cat.mad_hatter.decorators import  hook
-
+from cat.mad_hatter.decorators import hook
 
 
 @hook(priority=3)
@@ -17,7 +16,8 @@ def agent_fast_reply(fast_reply, cat):
     if cat.working_memory["translate"]:
         user_message = cat.working_memory["user_message_json"]["text"]
         lang = cat.working_memory["lang"]
-        prompt= f"""Your job is to tanslate the following phrase from the user into the language requested.
+        prompt = f"""Your job is to tanslate the following phrase from the user into the language requested. 
+Do not translate XML or JSON properties!
 ### Examples
 user: oggi ho mangiato la pasta
 lang: English
@@ -27,14 +27,15 @@ user: oggi ho mangiato la pasta
 lang: Spanish
 ai: hoy he comido pasta
 
+user: oggi ho mangiato la pasta <div class="pasticcio">Hello</div>
+lang: Spanish
+ai: hoy he comido pasta <div class="pasticcio">hola</div>
+
 ### Input
 user: {user_message}
 lang: {lang}
 ai:"""
         translation = cat.llm(prompt)
-        fast_reply = {
-            "output": translation
-        }
-        
+        fast_reply = {"output": translation}
 
     return fast_reply
